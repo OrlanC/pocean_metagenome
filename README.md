@@ -12,8 +12,8 @@ BioProject:
 PRJNA385854  
 
 Metadata:  
-Samples/ Deep/ Zone/ Material/ Collection_Date  
-SRR5788415/ 100m/  Epipelagic/    Water/     2011-06-13 T22:40:00  
+Samples/Deep/ Zone/ Material/ Collection_Date  
+SRR5788415 100m/  Epipelagic/    Water/     2011-06-13 T22:40:00  
 SRR5788416  75m/   Epipelagic/    Water/     2011-06-13 T22:40:00  
 SRR5788417  50m/   Epipelagic/    Water/     2011-06-13 T22:40:00  
 SRR5788420  5100m/ Mesopelagic/   Water/     2011-06-14 T04:11:00  
