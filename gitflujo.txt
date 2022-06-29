@@ -1,0 +1,6 @@
+git pull ---> actualizar todo antes de hacer cambios
+cambios ----> cambios en el archivo
+git add file or git add --all ----> permitir los cambios a uno o todos los archivos
+git commit -> comprometer el cambio
+git pull ---> actualizar (importante)
+git push
