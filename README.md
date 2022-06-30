@@ -50,7 +50,7 @@ qsub make_paths.sh
 {: .language-bash}  
 This step should be very quick.
 
-When you have your `path_file.txt` file you are ready to **download** using the script
+When you have your `path_file.txt` file you are ready to **download the SRA files** using the script
 `scripts_download/download_ocean_sra.sh` and run it with:
 
 :corn: :hourglass:
@@ -61,7 +61,7 @@ qsub download_ocean_sra.sh
 
 This step will take several hours. It is recommended that you leave it overnight.
 
-Unfortunately, Mazorka is not able to extract the downloaded files to obtain the `.fastq.gz` files.
+Unfortunately, Mazorka is not able to convert the downloaded files into the `.fastq.gz` files.
 So we need to **move the downloaded files to the local computer** and from the local computer to
  the server Betterlab. For this, run:
 
@@ -81,6 +81,14 @@ scp SRR* betterlab@132.248.196.38:/home/betterlab/hackatonMetagenomica/ocean_dat
 {: .language-bash}  
 
 This step may take a few hours. Make sure you have a stable internet connection.
+
+Now you can **convert the SRA files into `.fastq.gz` files** with:
+
+:microscope:
+~~~
+ls raw_data/ | while read line do: fasterq-dump $line -S -p -e12
+~~~
+{: .language-bash}
 
 ## Raw-reads processing
 This guide is for processing raw-reads of shuntgun metagenomic libraries of Pacific Ocean.
