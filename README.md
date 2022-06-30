@@ -71,8 +71,34 @@ scp SRR* betterlab@132.248.196.38:/home/betterlab/hackatonMetagenomica/ocean_dat
 {: .language-bash}
 This step may take a few hours. Make sure you have a stable internet connection.
 
+## Rawreads processinig
+This guide is for processing raw-reads of shuntgun metagenomic libraries of Pacific Ocean.
+Before starting is important installing FastQC and Trimmomatic for quality control analysis and read filtering in your computer (in mazorka these programs already installed):
 
- 
+1. [FastQC](https://github.com/s-andrews/FastQC/blob/master/INSTALL.txt)
+2. [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
+
+
+### Flow chart for processing raw-reads in each library
+:corn:
+It's important to use a high-performance computing cluster.
+
+1. Quality control analysis of raw-reads to know the quality of each library using fastqc:
+~~~
+qsub fastqc_po.sh
+~~~
+{: .language-bash}
+2. Filter of reads and clipping Nextera Transposase adapters (NexTranspSeq-PE.fa) using trimmomatic:
+~~~
+qsub trimming_pocean.sh
+~~~
+{: .language-bash}
+
+3. Evaluation of filtered reads and removal adapters by trimmomatic in each library to know number of filtered reads: 
+~~~
+qsub fastqc_po.sh
+~~~
+{: .language-bash} 
 
 
 ## Overrepresentation analysis
