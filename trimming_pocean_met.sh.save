@@ -1,0 +1,13 @@
+
+
+
+
+
+
+
+#PBS -N Trimmomatic_op_1
+#PBS -l nodes=1:ppn=8,mem=8gb,vmem=8gb,walltime=100:00:00
+#PBS -V
+#PBS -q default
+
+ 
