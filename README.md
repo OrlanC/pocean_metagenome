@@ -3,11 +3,14 @@
 Bioinformatic contribution for analysis of Pacific Ocean Metagenome.  
 This reposiory is for metagenomic analysis of pacific ocean data.  
 
-To read this tutorial:
+To use this tutorial:
 - :computer: Command run in the local computer
 - :corn: Command run in Mazorka server
 - :microscope: Command run in Betterlab server
 - :hourglass: Command that takes a lot of time
+
+- Make sure you adapt the scripts and commands to **your computer or your username**. 
+For example, some scripts run in Mazorka have the username `czirion` but when you use them you should put your username.
 
 ## Data
 
