@@ -3,9 +3,10 @@
 Bioinformatic contribution for analysis of Pacific Ocean Metagenome.  
 This reposiory is for metagenomic analysis of pacific ocean data.  
 
-> - :computer: Command run in the local computer
-> - :corn: Command run in Mazorka server
-> - :microscope: Command run in Betterlab server
+- :computer: Command run in the local computer
+- :corn: Command run in Mazorka server
+- :microscope: Command run in Betterlab server
+- :hourglass: Command that takes a lot of time
 
 ## Data
 
@@ -34,8 +35,8 @@ SRR5788422  /204m/  Abyssopelagic/ Water/     2011-06-13 T22:40:00
 The accession numbers to download were chosen according to .... FIXME .... and 
 are listed in `SRA_Acc_List.txt`. 
 
-To download all the accessions inside the server MAZORKA first you need to *obtain the paths
- of the listed accessions* with the script `make_paths.sh` and run it in the server
+To download all the accessions inside the server Mazorka first you need to **obtain the paths
+ of the listed accessions** with the script `make_paths.sh` and run it in the server
  with the command :
 
 :corn:
@@ -56,9 +57,9 @@ qsub download_ocean_sra.sh
 
 This step will take several hours. It is recommended that you leave it overnight.
 
-Unfortunately, MAZORKA is not able to extract the downloaded files to obtain the `.fastq.gz` files.
-So we need to * move the downloaded files to the local computer* and from the local computer to
- the server BETTERLAB. For this, run:
+Unfortunately, Mazorka is not able to extract the downloaded files to obtain the `.fastq.gz` files.
+So we need to **move the downloaded files to the local computer** and from the local computer to
+ the server Betterlab. For this, run:
 
 :computer: :hourglass:
 ~~~
@@ -67,7 +68,7 @@ scp czirion@mazorka.langebio.cinvestav.mx:/LUSTRE/usuario/czirion/SRR* .
 {: .language-bash}
 This step may take a few hours. Make sure you have a stable internet conection.
 
-When this is done now *move the files to BETTERLAB*:
+When this is done now **move the files to Betterlab**:
 
 :computer: :hourglass:
 ~~~
