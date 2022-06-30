@@ -9,7 +9,7 @@ To use this tutorial:
 - :microscope: Command run in Betterlab server
 - :hourglass: Command that takes a lot of time
 
-- Make sure you adapt the scripts and commands to **your computer or your username**. 
+- Make sure you adapt the scripts and commands to **the filesystem of your computer and/or your username**. 
 For example, some scripts run in Mazorka have the username `czirion` but when you use them you should put your username.
 
 ## Data
