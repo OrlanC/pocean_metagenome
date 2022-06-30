@@ -3,6 +3,7 @@
 Bioinformatic contribution for analysis of Pacific Ocean Metagenome.  
 This reposiory is for metagenomic analysis of pacific ocean data.  
 
+To read this tutorial:
 - :computer: Command run in the local computer
 - :corn: Command run in Mazorka server
 - :microscope: Command run in Betterlab server
@@ -46,7 +47,7 @@ qsub make_paths.sh
 {: .language-bash}  
 This step should be very quick.
 
-When you have your `path_file.txt` file you are ready to *download* using the script
+When you have your `path_file.txt` file you are ready to **download** using the script
 `download_ocean_sra.sh` and run it with:
 
 :corn: :hourglass:
