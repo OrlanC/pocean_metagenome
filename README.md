@@ -3,6 +3,10 @@
 Bioinformatic contribution for analysis of Pacific Ocean Metagenome.  
 This reposiory is for metagenomic analysis of pacific ocean data.  
 
+> - :computer: Command run in the local computer
+> - :corn: Command run in Mazorka server
+> - :microscope: Command run in Betterlab server
+
 ## Data
 
 Metagenomic sequencing reads from oceans were taken from:
@@ -38,24 +42,25 @@ To download all the accessions inside the server MAZORKA first you need to *obta
 ~~~
 qsub make_paths.sh
 ~~~
-{: .language-bash}
+{: .language-bash}  
 This step should be very quick.
 
 When you have your `path_file.txt` file you are ready to *download* using the script
 `download_ocean_sra.sh` and run it with:
 
-:corn:
+:corn: :hourglass:
 ~~~
 qsub download_ocean_sra.sh
 ~~~
-{: .language-bash}
+{: .language-bash}  
+
 This step will take several hours. It is recommended that you leave it overnight.
 
 Unfortunately, MAZORKA is not able to extract the downloaded files to obtain the `.fastq.gz` files.
 So we need to * move the downloaded files to the local computer* and from the local computer to
  the server BETTERLAB. For this, run:
 
-:computer:
+:computer: :hourglass:
 ~~~
 scp czirion@mazorka.langebio.cinvestav.mx:/LUSTRE/usuario/czirion/SRR* .
 ~~~
@@ -64,11 +69,12 @@ This step may take a few hours. Make sure you have a stable internet conection.
 
 When this is done now *move the files to BETTERLAB*:
 
-:computer:
+:computer: :hourglass:
 ~~~
 scp SRR* betterlab@132.248.196.38:/home/betterlab/hackatonMetagenomica/ocean_data/raw_data/
 ~~~
-{: .language-bash}
+{: .language-bash}  
+
 This step may take a few hours. Make sure you have a stable internet connection.
 
 
