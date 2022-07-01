@@ -152,6 +152,38 @@ ggsave("cluster_jaccard.svg", plot = rel_phylum_cluster_Jaccard, width = 6.5, he
 rel_phylum_cluster_Jaccard
 ```
 
+Compare clusters with different methods.
+
+```{r, warning=FALSE, message=FALSE,  fig.pos = 'H', fig.dim = c(10,8), out.width="100%" , fig.align = "center", fig.cap="Clusters with all methods"}
+dist = "jaccard" # especify distance
+ord_meths = c("DCA", "CCA", "RDA", "NMDS", "MDS", "PCoA") #vector of methods names
+plist = llply(as.list(ord_meths), function(i, physeq, dist){
+  ordi = ordinate(physeq, method=i, distance=dist)
+  plot_ordination(physeq, ordi, "Samples", color="Zone")
+}, physeq=relative_phylum_global, dist)
+
+names(plist) <- ord_meths
+
+#Dataframe for plots
+pdataframe = ldply(plist, function(x){
+  df = x$data[, 1:2]
+  colnames(df) = c("Axis_1", "Axis_2")
+  return(cbind(df, x$data))
+})
+names(pdataframe)[1] = "method"
+
+
+#Plots with all methods
+p = ggplot(pdataframe, aes(Axis_1, Axis_2, color=Zone, shape=Zone))
+p = p + geom_point(size=2) + geom_text(aes(label=Samples), size=2,vjust = "inward", hjust = "inward")
+p = p + facet_wrap(~method, scales="free")
+p = p + scale_fill_brewer(type="qual", palette="Set1")
+p = p + scale_colour_brewer(type="qual", palette="Set1") 
+p= p + labs(x="", y="")
+p
+```
+
+
 ## Cluster analysis using `cluster` and `factoExtra` packages.
 
 Filter the data set by samples and Phylum.
@@ -320,6 +352,9 @@ corr_plot <- corrplot(cor_base, type = "upper", order = "hclust", tl.col = "blac
          p.mat = p.mat, sig.level = 0.05)
 ```
 
+## To do
+
+- Follow the instructions on https://github.com/microbma/earthnetwork/ with the filter OTU tables. 
 
 ## References
 

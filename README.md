@@ -127,3 +127,7 @@ qsub fastqc_po.sh
 ## Overrepresentation analysis
 [Here](https://orlanc.github.io/pocean_metagenome/Overrepresentation_analysis/overrepresentation_analysis.html) you
 can see the R script made for the overrepresentation analysis. 
+
+## Co-ocurrence analysis
+
+[Here](https://orlanc.github.io/pocean_metagenome/coocurrence.html) you can see the R script made for the co-ocurrence analysis.
