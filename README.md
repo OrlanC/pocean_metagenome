@@ -10,7 +10,7 @@ To use this tutorial:
 - :hourglass: Command that takes a lot of time
 
 - Make sure you adapt the scripts and commands to **the filesystem of your computer and/or your username**. 
-For example, some scripts run in Mazorka have the username `czirion` but when you use them you should put your username.
+For example, some scripts run in Mazorka have`username` but when you use them you should put your username.
 
 ## Data
 
@@ -71,7 +71,7 @@ So we need to **move the downloaded files to the local computer** and from the l
 
 :computer: :hourglass:
 ~~~
-scp czirion@mazorka.langebio.cinvestav.mx:/LUSTRE/usuario/czirion/SRR* .
+scp username@mazorka.langebio.cinvestav.mx:/LUSTRE/usuario/username/SRR* .
 ~~~
 {: .language-bash}
 This step may take a few hours. Make sure you have a stable internet conection.
