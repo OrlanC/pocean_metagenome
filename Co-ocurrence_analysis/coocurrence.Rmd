@@ -1,6 +1,6 @@
 ---
 title: "Co-ocurrence"
-author: "Clau Zirion"
+author: "Orlando"
 date: '2022-07-01'
 output: html_document
 ---
