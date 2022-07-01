@@ -58,3 +58,41 @@ colnames(df_n)<-colnames(mydata)
 head(df_n)
 ```
 
+## Co-ocurrence analysis by C-score and Spearman correlation
+
+Permutation of 10 OTU's like test
+```{r}
+#install.packages("combinat")
+library("combinat")
+#sam<-sample(1:400, 10, replace = TRUE )
+df_n1<-df_n[c(716:726),]
+#df_n1<-df_n
+comn<- as.data.frame(combn(1:nrow(df_n1), 2))
+data1<-mydata
+rownames(data1)<-1:nrow(data1)
+head(data1)
+```
+
+Selection of OTUs by C-score and Spearman correlation
+
+```{r}
+list_oc <-list()
+for (i in colnames(comn)){
+  print(comn[,i])
+  perm=comn[,i]
+  ocdf=df_n1[c(min(perm), max(perm)),]
+  names=rownames(data1[c(min(perm), max(perm)),])
+  cij<-(length(ocdf[1,])-sum(ocdf[1,]))*(length(ocdf[2,])-sum(ocdf[2,]))
+  spearm=data1[c(min(perm),max(perm)),]
+  cort<-cor.test(as.numeric(spearm[1,]),as.numeric(spearm[2,]), method = "spearman", conf.level = 0.95)
+  if (cij>0 & cort$p.value<1){
+    list_oc[[i]]<-c(names,ocdf,cij,cort$p.value)
+  }else{
+    print(paste("drop..."))
+  }
+}
+
+head(list_oc)
+```
+
+
