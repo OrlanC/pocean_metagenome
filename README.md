@@ -130,4 +130,4 @@ can see the R script made for the overrepresentation analysis.
 
 ## Co-ocurrence analysis
 
-[Here](https://orlanc.github.io/pocean_metagenome/coocurrence.html) you can see the R script made for the co-ocurrence analysis.
+[Here](https://orlanc.github.io/pocean_metagenome/Co-ocurrence_analysis/coocurrence.html) you can see the R script made for the co-ocurrence analysis.
