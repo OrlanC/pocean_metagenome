@@ -7,8 +7,8 @@ output: html_document
 
 ## Analysis with NetCoMi
 
-Install and load packages:
-```{r}
+Install packages:
+```{r, eval=FALSE}
 
 install.packages("devtools")
 install.packages("BiocManager")
@@ -16,7 +16,7 @@ install.packages("WGCNA")
 install.packages("qgraph")
 install.packages("NetCoMi")
 
-library(WGCNA)
+
 # Install NetCoMi
 devtools::install_github("stefpeschel/NetCoMi", 
                          dependencies = c("Depends", "Imports", "LinkingTo"),
@@ -28,8 +28,14 @@ devtools::install_github("zdk123/SpiecEasi", force = TRUE)
 
 install.packages("remotes")
 remotes::install_github("stefpeschel/NetCoMi", force = TRUE)
-library(NetCoMi)
 
+
+```
+
+Load libraries:
+```{r}
+library(WGCNA)
+library(NetCoMi)
 ```
 
 
