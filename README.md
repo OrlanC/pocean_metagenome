@@ -39,6 +39,12 @@ SRR5788422  /204m/  Abyssopelagic/ Water/     2011-06-13 T22:40:00
 The accession numbers to download were chosen according to .... FIXME .... and 
 are listed in `scripts_download/SRA_Acc_List.txt`. 
 
+For this sections the used software is:
+1.  
+2. [fasterq-dump](https://github.com/ncbi/sra-tools/wiki/HowTo:-fasterq-dump) version 2.11.3
+
+
+
 To download all the accessions inside the server Mazorka first you need to **obtain the paths
  of the listed accessions** with the script `scripts_download/make_paths.sh` and run it in the server
  with the command :
