@@ -82,11 +82,11 @@ scp SRR* betterlab@132.248.196.38:/home/betterlab/hackatonMetagenomica/ocean_dat
 
 This step may take a few hours. Make sure you have a stable internet connection.
 
-Now you can **convert the SRA files into `.fastq.gz` files** with:
+Enter `raw_data/`. Now you can **convert the SRA files into `.fastq.gz` files** with:
 
 :microscope:
 ~~~
-ls raw_data/ | while read line do: fasterq-dump $line -S -p -e12
+ls | while read line; do fasterq-dump $line -S -p -e12; gzip $line_*.fastq; done
 ~~~
 {: .language-bash}
 
