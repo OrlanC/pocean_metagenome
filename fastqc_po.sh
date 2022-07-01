@@ -4,7 +4,7 @@
 #PBS -q default
 
 #change path
-cd /LUSTRE/usuario/mcamargo/metag_paocean_071221/metgenome_lib_opS0331-36/Trimmedseq_op
+cd /LUSTRE/usuario/username/metag_paocean_071221/metgenome_lib_opS0331-36/Trimmedseq_op
 
 
 #load required module
