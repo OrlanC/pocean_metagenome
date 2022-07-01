@@ -4,7 +4,7 @@ author: ""
 date: "06/2022"
 output: html_document
 ---
-
+  
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, root.dir = "~/dc_workshop/pocean_metagenome/")
 ```
@@ -22,7 +22,12 @@ library(RColorBrewer)
 library(ggpubr)
 library(readr)
 library(patchwork)
+library(plyr)
 library(tidyverse)
+library(cluster)
+library(factoextra)
+library(ggcorrplot)
+library(corrplot)
 ```
 
 ### Read the biom file
@@ -115,11 +120,206 @@ abs_phyl_global_df_A <- abs_phyl_global_df %>%
   pivot_wider(names_from = OTU, values_from = Abundance)
 ```
 
-## Network inference
+Create the otutable directory
 
-## Overrepresentation analysis
+```{bash, eval=FALSE, engine="sh"}
+mkdir otutable
+```
 
-## Topological features
+Save otu tables without row names.
+```{r}
+#write.csv(abs_phyl_global_df_E,paste("~/dc_workshop/pocean_metagenome/Overrepresentation_analysis/otutable/","Epipelagic",".csv",sep=""), row.names= FALSE)
+#write.csv(abs_phyl_global_df_M,paste("~/dc_workshop/pocean_metagenome/Overrepresentation_analysis/otutable/","Mesopelagic",".csv",sep=""), row.names= FALSE)
+#write.csv(abs_phyl_global_df_A,paste("~/dc_workshop/pocean_metagenome/Overrepresentation_analysis/otutable/","Abyssopelagic",".csv",sep=""), row.names= FALSE)
+```
+
+## Clusters
+
+Calculate the `ordinate` objet with Jaccard distance.
+
+```{r, warning=FALSE, message=FALSE}
+meta.ord <- ordinate(physeq = relative_phylum_global, method = "NMDS", 
+                     distance = "jaccard")
+```
+
+Plot the clusters.
+
+```{r, warning=FALSE, message=FALSE, fig.pos = 'H', fig.dim = c(10,6), out.width="100%" , fig.align = "center", message=FALSE}
+rel_phylum_cluster_Jaccard <- plot_ordination(physeq = relative_phylum_global, ordination = meta.ord, color="Zone")+
+  geom_text(aes(label=Samples), size=3)
+
+ggsave("cluster_jaccard.svg", plot = rel_phylum_cluster_Jaccard, width = 6.5, height = 3.65, units = "in", dpi = 400)
+rel_phylum_cluster_Jaccard
+```
+
+## Cluster analysis using `cluster` and `factoExtra` packages.
+
+Filter the data set by samples and Phylum.
+```{r, warning=FALSE, message=FALSE,}
+abs_filter <- daply(
+  .data = rel_phyl_global_df,
+  .variables = c("Samples", "Phylum"),
+  .fun = function(x) sum(x$Abundance)
+)
+abs_filter <- as.data.frame(abs_filter)
+abs_filter[is.na(abs_filter)] = 0
+```
+
+Compute the distance matrix with `pearson` distance.
+
+```{r matriz_de_distancia}
+#Computing correlation based distance: pearson, spearman or kendall
+dist_corr <- get_dist(abs_filter, method = "pearson")
+```
+
+Plot distance matrix.
+
+```{r visualizar_matriz, collapse=TRUE, echo=FALSE, fig.pos = 'H', fig.align = "center", message=FALSE, fig.cap = 'Heatmap of distance matrix' }
+fviz_dist(dist.obj = dist_corr, lab_size = 8)
+```
+
+Clusters with different methods
+
+```{r  clusters}
+set.seed(12345)
+hc_single <- hclust(d=dist_corr, method = "single")
+hc_average <- hclust(d=dist_corr, method = "average")
+hc_complete <- hclust(d=dist_corr, method = "complete")
+hc_ward <- hclust(d=dist_corr, method = "ward.D2")
+hc_median <- hclust(d=dist_corr, method = "median")
+hc_centroid <- hclust(d=dist_corr, method = "centroid")
+```
+
+Plot clusters with different methods.
+
+```{r dendograma_average, include = TRUE, echo = FALSE, fig.pos = 'H', fig.align = "center", warning=FALSE, message=FALSE, fig.cap = 'Cluster with `average` method'}
+fviz_dend(x = hc_average, k=3, 
+          cex = 0.7,
+          main = "",
+          xlab = "Samples",
+          ylab = "Distance",
+          sub = "",
+          horiz = TRUE) +
+  geom_hline(yintercept = 0.01, linetype = "dashed") 
+```
+
+```{r dendograma_Ward, include = TRUE, echo = FALSE, fig.pos = 'H', fig.align = "center", warning=FALSE, message=FALSE, fig.cap = 'Cluster with `ward` method' }
+fviz_dend(x = hc_ward, k=3,
+          cex = 0.7,
+          main = "",
+          xlab = "Samples",
+          ylab = "Distance",
+          sub = "",
+          horiz = TRUE)+
+  geom_hline(yintercept = 0.02, linetype = "dashed")
+```
+
+
+```{r dendograma_single, include = TRUE, echo = FALSE, fig.pos = 'H', fig.align = "center", warning=FALSE, message=FALSE, fig.cap = 'Cluster with `single` method' }
+fviz_dend(x = hc_single, k=3,
+          cex = 0.7,
+          main = "",
+          xlab = "Samples",
+          ylab = "Distance",
+          sub = "",
+          horiz = TRUE)+
+  geom_hline(yintercept = 0.01, linetype = "dashed")
+```
+
+```{r dendograma_complete, include = TRUE, echo = FALSE, fig.pos = 'H', fig.align = "center", warning=FALSE, message=FALSE, fig.cap = 'Cluster with `complete` method' }
+fviz_dend(x = hc_complete, k=3,
+          cex = 0.7,
+          main = "",
+          xlab = "Samples",
+          ylab = "Distance",
+          sub = "",horiz = TRUE)+
+  geom_hline(yintercept = 0.018, linetype = "dashed")
+
+```
+
+
+```{r dendograma_median, include = TRUE, echo = FALSE, fig.pos = 'H', fig.align = "center", warning=FALSE, message=FALSE, fig.cap = 'Cluster with `median` method' }
+fviz_dend(x = hc_median, k=3,
+          cex = 0.7,
+          main = "",
+          xlab = "Samples",
+          ylab = "Distance",
+          sub = "",horiz = TRUE)+
+  geom_hline(yintercept = 0.01, linetype = "dashed")
+```
+
+
+```{r dendograma_centroide, include = TRUE, echo = FALSE, fig.pos = 'H', fig.align = "center", warning=FALSE, message=FALSE, fig.cap = 'Cluster with `centroid` method'}
+fviz_dend(x = hc_centroid, k=3,
+          cex = 0.7,
+          main = "",
+          xlab = "Samples",
+          ylab = "Distance",
+          sub = "",horiz = TRUE)+
+  geom_hline(yintercept = 0.01, linetype = "dashed")
+```
+
+
+Compare methods.
+
+```{r comparacion_coef, collapse=TRUE, echo=FALSE}
+# Methods
+m <- c( "average", "single", "complete", "ward.D2", "median", "centroid")
+names(m) <- c( "average", "single", "complete", "ward.D2", "median", "centroid")
+# Compute the correlation coefficient 
+coef_cor <- function(x) {
+  cor(x=dist_corr, cophenetic(hclust(d=dist_corr, method = x)))
+}
+# Comparative table
+coef_tabla <- map_dbl(m, coef_cor) 
+coef_tabla
+```
+
+PCA proyection.
+
+```{r pca-grupos, include = TRUE, echo = FALSE, fig.pos = 'H', fig.align = "center", warning=FALSE, message=FALSE, fig.cap = 'Clusters and PCA'}
+fviz_cluster(object = list(data=abs_filter, cluster=cutree(hc_average, k=3)),
+             ellipse.type = "convex", repel = TRUE, show.clust.cent = FALSE,
+             labelsize = 8)  +
+  labs(title = "Clusters + PCA proyection",
+       subtitle = "Pearson distance, Linkage average, K=3") +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+Groups obtained.
+
+```{r }
+grupos_average <-sort(cutree(hc_average, 3))
+grupos_average
+```
+
+## Corplot
+
+```{r}
+cor_base <- cor(abs_filter, use="complete.obs", method = "spearman")
+
+cor.mtest <- function(mat, ...) {
+  mat <- as.matrix(mat)
+  n <- ncol(mat)
+  p.mat<- matrix(NA, n, n)
+  diag(p.mat) <- 0
+  for (i in 1:(n - 1)) {
+    for (j in (i + 1):n) {
+      tmp <- cor.test(mat[, i], mat[, j], ...)
+      p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
+    }
+  }
+  colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
+  p.mat
+}
+# matrix of the p-value of the correlation
+p.mat <- cor.mtest(cor_base)
+
+corr_plot <- corrplot(cor_base, type = "upper", order = "hclust", tl.col = "black", tl.srt = 45,
+         p.mat = p.mat, sig.level = 0.05)
+```
+
 
 ## References
 
