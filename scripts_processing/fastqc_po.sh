@@ -3,8 +3,8 @@
 #PBS -V
 #PBS -q default
 
-#change path
-cd /LUSTRE/usuario/username/metag_paocean_071221/metgenome_lib_opS0331-36/Trimmedseq_op
+#change path to the folder with the raw_reads
+cd /LUSTRE/usuario/username/
 
 
 #load required module
