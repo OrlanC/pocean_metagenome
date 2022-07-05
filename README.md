@@ -96,31 +96,36 @@ ls | while read line; do fasterq-dump $line -S -p -e12; gzip $line_*.fastq; done
 ~~~
 {: .language-bash}
 
+Once you have the `.fastq.gz` yo can **transfer them again to Mazorka** to process them there.
+
 ## Raw-reads processing
-This guide is for processing raw-reads of shuntgun metagenomic libraries of Pacific Ocean.
-Before starting is important installing FastQC and Trimmomatic for quality control analysis and read filtering in your computer (in mazorka these programs already installed):
+This guide is for processing the raw-reads of shutgun metagenomic libraries of Pacific Ocean.
+Before starting is important installing FastQC and Trimmomatic for quality control analysis and read filtering in your computer (in Mazorka these programs are already installed):
 
 1. [FastQC](https://github.com/s-andrews/FastQC/blob/master/INSTALL.txt)
 2. [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
 
 
 ### Flow chart for processing raw-reads in each library
-:corn:
+
 It's important to use a high-performance computing cluster.
 
-1. Quality control analysis of raw-reads to know the quality of each library using fastqc:
+1. **Quality control analysis** of raw-reads to know the quality of each library using FastQC:
+:corn:
 ~~~
 qsub fastqc_po.sh
 ~~~
 {: .language-bash}  
 
-2. Filter of reads and clipping Nextera Transposase adapters (NexTranspSeq-PE.fa) using trimmomatic:
+2. **Filter of reads** and clipping Nextera Transposase adapters (NexTranspSeq-PE.fa) using Trimmomatic:
+:corn:
 ~~~
 qsub trimming_pocean.sh
 ~~~
 {: .language-bash}
   
-3. Evaluation of filtered reads and removal adapters by trimmomatic in each library to know number of filtered reads: 
+3. **Evaluation of filtered reads** in each library to know the quality and number of filtered reads: 
+:corn:
 ~~~
 qsub fastqc_po.sh
 ~~~
