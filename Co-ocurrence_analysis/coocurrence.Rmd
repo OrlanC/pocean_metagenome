@@ -1,6 +1,6 @@
 ---
 title: "Co-ocurrence"
-author: "Orlando"
+author: "Orlando Camargo"
 date: '2022-07-01'
 output: html_document
 ---
@@ -9,7 +9,7 @@ output: html_document
 
 Set working directory and load libraries
 ```{r}
-setwd("/home/claudia/Documentos/carpentries/pocean_metagenome/")
+setwd("/home/orlando/data/pocean_metagenome/")
 #BiocManager::install("rhdf5")
 #BiocManager::install("phyloseq")
 library("phyloseq")
@@ -21,7 +21,7 @@ library("patchwork")
 ## Import BIOM file
 
 ```{r}
-merged_metagenome_op<- import_biom("data/pacific_ocean.biom")
+merged_metagenome_op<- import_biom("pacific_ocean.biom")
 mydata<-merged_metagenome_op@otu_table
 mydata<-as.data.frame(mydata)
 head(mydata)
@@ -84,7 +84,7 @@ for (i in colnames(comn)){
   names=rownames(data1[c(min(perm), max(perm)),])
   cij<-(length(ocdf[1,])-sum(ocdf[1,]))*(length(ocdf[2,])-sum(ocdf[2,]))
   spearm=data1[c(min(perm),max(perm)),]
-  cort<-cor.test(as.numeric(spearm[1,]),as.numeric(spearm[2,]), method = "spearman", conf.level = 0.95)
+  cort<-cor.test(as.numeric(spearm[1,]),as.numeric(spearm[2,]), method = "spearman", conf.level = 0.95, exact=FALSE)
   if (cij>0 & cort$p.value<1){
     list_oc[[i]]<-c(names,ocdf,cij,cort$p.value)
   }else{
@@ -92,7 +92,7 @@ for (i in colnames(comn)){
   }
 }
 
-head(list_oc)
+head(list_oc,1)
 ```
 
 
