@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Clau Zirion" />
+<meta name="author" content="Orlando" />
 
 <meta name="date" content="2022-07-01" />
 
@@ -364,7 +364,7 @@ pre code {
 
 
 <h1 class="title toc-ignore">Co-ocurrence</h1>
-<h4 class="author">Clau Zirion</h4>
+<h4 class="author">Orlando</h4>
 <h4 class="date">2022-07-01</h4>
 
 </div>
@@ -373,17 +373,18 @@ pre code {
 <div id="co-ocurrence-analysis" class="section level2">
 <h2>Co-ocurrence analysis</h2>
 <p>Set working directory and load libraries</p>
-<pre class="r"><code>setwd(&quot;/home/claudia/Documentos/carpentries/pocean_metagenome/&quot;)
+<pre class="r"><code>setwd(&quot;C:/Users/Orlando Camargo/Desktop/&quot;)
 #BiocManager::install(&quot;rhdf5&quot;)
 #BiocManager::install(&quot;phyloseq&quot;)
 library(&quot;phyloseq&quot;)
-library(&quot;ggplot2&quot;)
-library(&quot;readr&quot;)
+library(&quot;ggplot2&quot;)</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.1.3</code></pre>
+<pre class="r"><code>library(&quot;readr&quot;)
 library(&quot;patchwork&quot;)</code></pre>
 </div>
 <div id="import-biom-file" class="section level2">
 <h2>Import BIOM file</h2>
-<pre class="r"><code>merged_metagenome_op&lt;- import_biom(&quot;data/pacific_ocean.biom&quot;)
+<pre class="r"><code>merged_metagenome_op&lt;- import_biom(&quot;pacific_ocean.biom&quot;)
 mydata&lt;-merged_metagenome_op@otu_table
 mydata&lt;-as.data.frame(mydata)
 head(mydata)</code></pre>
@@ -409,9 +410,7 @@ head(data)</code></pre>
 <h2>Presence and absence of species</h2>
 <pre class="r"><code>data$first&lt;-rep(1, each=nrow(data))
 data&lt;- data[ , c(&quot;first&quot;,names(data)[names(data) != &quot;first&quot;])]
-
 data$last&lt;-rep(1, each=nrow(data))
-
 y=as.single(c())
 df_n&lt;-data.frame(row.names = rownames(data))
 for (i in colnames(data)){
@@ -435,7 +434,6 @@ for (i in colnames(data)){
 ## [1] &quot;running: last ...&quot;</code></pre>
 <pre class="r"><code>df_n&lt;-df_n[,-c(1:2)]
 colnames(df_n)&lt;-colnames(mydata)
-
 head(df_n)</code></pre>
 <pre><code>##   SRR5788415 SRR5788416 SRR5788417 SRR5788420 SRR5788421 SRR5788422
 ## 1          1          1          1          1          1          1
@@ -444,6 +442,182 @@ head(df_n)</code></pre>
 ## 4          1          1          1          1          1          1
 ## 5          1          1          1          1          1          1
 ## 6          1          1          1          0          0          0</code></pre>
+</div>
+<div id="co-ocurrence-analysis-by-c-score-and-spearman-correlation" class="section level2">
+<h2>Co-ocurrence analysis by C-score and Spearman correlation</h2>
+<p>Permutation of 10 OTU’s like test</p>
+<pre class="r"><code>#install.packages(&quot;combinat&quot;)
+library(&quot;combinat&quot;)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;combinat&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:utils&#39;:
+## 
+##     combn</code></pre>
+<pre class="r"><code>#sam&lt;-sample(1:400, 10, replace = TRUE )
+df_n1&lt;-df_n[c(716:726),]
+#df_n1&lt;-df_n
+comn&lt;- as.data.frame(combn(1:nrow(df_n1), 2))
+data1&lt;-mydata
+rownames(data1)&lt;-1:nrow(data1)
+head(data1)</code></pre>
+<pre><code>##   SRR5788415 SRR5788416 SRR5788417 SRR5788420 SRR5788421 SRR5788422
+## 1        553        521       1152         81         54        629
+## 2      45458      44051     127642        848        672      10672
+## 3    1064361    1138750    3109010       9773       3609      55610
+## 4      42846      43832     132412        410        203        985
+## 5       7961      12166      21462        276        174      10743
+## 6        152        164        484          2          1          0</code></pre>
+<p>Selection of OTUs by C-score and Spearman correlation</p>
+<pre class="r"><code>list_oc &lt;-list()
+for (i in colnames(comn)){
+  print(comn[,i])
+  perm=comn[,i]
+  ocdf=df_n1[c(min(perm), max(perm)),]
+  names=rownames(data1[c(min(perm), max(perm)),])
+  cij&lt;-(length(ocdf[1,])-sum(ocdf[1,]))*(length(ocdf[2,])-sum(ocdf[2,]))
+  spearm=data1[c(min(perm),max(perm)),]
+  cort&lt;-cor.test(as.numeric(spearm[1,]),as.numeric(spearm[2,]), method = &quot;spearman&quot;, conf.level = 0.95, exact=FALSE)
+  if (cij&gt;0 &amp; cort$p.value&lt;1){
+    list_oc[[i]]&lt;-c(names,ocdf,cij,cort$p.value)
+  }else{
+    print(paste(&quot;drop...&quot;))
+  }
+}</code></pre>
+<pre><code>## [1] 1 2
+## [1] &quot;drop...&quot;
+## [1] 1 3
+## [1] &quot;drop...&quot;
+## [1] 1 4
+## [1] &quot;drop...&quot;
+## [1] 1 5
+## [1] &quot;drop...&quot;
+## [1] 1 6
+## [1] &quot;drop...&quot;
+## [1] 1 7
+## [1] &quot;drop...&quot;
+## [1] 1 8
+## [1] &quot;drop...&quot;
+## [1] 1 9
+## [1] &quot;drop...&quot;
+## [1]  1 10
+## [1] &quot;drop...&quot;
+## [1]  1 11
+## [1] &quot;drop...&quot;
+## [1] 2 3
+## [1] 2 4
+## [1] &quot;drop...&quot;
+## [1] 2 5
+## [1] &quot;drop...&quot;
+## [1] 2 6
+## [1] &quot;drop...&quot;
+## [1] 2 7
+## [1] &quot;drop...&quot;
+## [1] 2 8
+## [1] 2 9
+## [1]  2 10
+## [1] &quot;drop...&quot;
+## [1]  2 11
+## [1] &quot;drop...&quot;
+## [1] 3 4
+## [1] &quot;drop...&quot;
+## [1] 3 5
+## [1] &quot;drop...&quot;
+## [1] 3 6
+## [1] &quot;drop...&quot;
+## [1] 3 7
+## [1] &quot;drop...&quot;
+## [1] 3 8
+## [1] 3 9
+## [1]  3 10
+## [1] &quot;drop...&quot;
+## [1]  3 11
+## [1] &quot;drop...&quot;
+## [1] 4 5
+## [1] &quot;drop...&quot;
+## [1] 4 6
+## [1] &quot;drop...&quot;
+## [1] 4 7
+## [1] &quot;drop...&quot;
+## [1] 4 8
+## [1] &quot;drop...&quot;
+## [1] 4 9
+## [1] &quot;drop...&quot;
+## [1]  4 10
+## [1] &quot;drop...&quot;
+## [1]  4 11
+## [1] &quot;drop...&quot;
+## [1] 5 6
+## [1] &quot;drop...&quot;
+## [1] 5 7
+## [1] &quot;drop...&quot;
+## [1] 5 8
+## [1] &quot;drop...&quot;
+## [1] 5 9
+## [1] &quot;drop...&quot;
+## [1]  5 10
+## [1] &quot;drop...&quot;
+## [1]  5 11
+## [1] &quot;drop...&quot;
+## [1] 6 7
+## [1] &quot;drop...&quot;
+## [1] 6 8
+## [1] &quot;drop...&quot;
+## [1] 6 9
+## [1] &quot;drop...&quot;
+## [1]  6 10
+## [1] &quot;drop...&quot;
+## [1]  6 11
+## [1] &quot;drop...&quot;
+## [1] 7 8
+## [1] &quot;drop...&quot;
+## [1] 7 9
+## [1] &quot;drop...&quot;
+## [1]  7 10
+## [1] &quot;drop...&quot;
+## [1]  7 11
+## [1] &quot;drop...&quot;
+## [1] 8 9
+## [1]  8 10
+## [1] &quot;drop...&quot;
+## [1]  8 11
+## [1] &quot;drop...&quot;
+## [1]  9 10
+## [1] &quot;drop...&quot;
+## [1]  9 11
+## [1] &quot;drop...&quot;
+## [1] 10 11
+## [1] &quot;drop...&quot;</code></pre>
+<pre class="r"><code>head(list_oc,1)</code></pre>
+<pre><code>## $V11
+## $V11[[1]]
+## [1] &quot;2&quot;
+## 
+## $V11[[2]]
+## [1] &quot;3&quot;
+## 
+## $V11$SRR5788415
+## [1] 0 0
+## 
+## $V11$SRR5788416
+## [1] 0 0
+## 
+## $V11$SRR5788417
+## [1] 0 1
+## 
+## $V11$SRR5788420
+## [1] 0 0
+## 
+## $V11$SRR5788421
+## [1] 1 0
+## 
+## $V11$SRR5788422
+## [1] 1 0
+## 
+## $V11[[9]]
+## [1] 20
+## 
+## $V11[[10]]
+## [1] 0.004804665</code></pre>
 </div>
 
 
